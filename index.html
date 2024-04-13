@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="https://media.discordapp.net/attachments/1206202818583859233/1228726441068462140/KKTS_Logo-removebg-preview_1.png?ex=662d17ac&is=661aa2ac&hm=0e6310dd7eb825f3da3ac5385a5f75cf6470b5ea502141a35bfcb4f2a2a56932&=&format=webp&quality=lossless&width=625&height=625" type="image/x-icon">
+<title>Loading...</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #bebdbd;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .loader-container {
+    text-align: center;
+  }
+  .loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #30592e;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .loading-text {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+  <div class="loader-container">
+    <div class="loader"></div>
+    <div class="loading-text">Loading...</div>
+  </div>
+
+<script>
+  setTimeout(function() {
+    window.location.href = 'main.html'; // Redirect to main.html after 2 seconds
+  }, 2000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="icon" href="https://media.discordapp.net/attachments/1206202818583859233/1228726441068462140/KKTS_Logo-removebg-preview_1.png?ex=662d17ac&is=661aa2ac&hm=0e6310dd7eb825f3da3ac5385a5f75cf6470b5ea502141a35bfcb4f2a2a56932&=&format=webp&quality=lossless&width=625&height=625" type="image/x-icon">
+<title>Plant Databasis</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #e3e3e3;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        box-shadow: 0 0px 10px rgb(131, 183, 131);
+    }
+    .filter-container {
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .search-input, .filter-select, .apply-button {
+        width: calc(33.33% - 10px);
+        margin-bottom: 10px;
+    }
+    .filter-select, .search-input {
+    width: calc(750px/3);
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: rgba(117, 163, 117, 0.664);
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+    transition: 0.2s ease-in-out;
+    color: white;
+    font-weight: bold;
+    margin-right: 10px; /* Add margin between filter elements */
+}
+
+.filter-select:hover, .search-input:hover {
+    padding: 10px;
+    box-shadow: 0 0px 10px rgb(131, 183, 131);
+}
+
+    .search-input {
+        margin-right: 10px;
+        padding: 10px;
+        background-color: rgba(117, 163, 117, 0.664);
+        cursor: pointer;
+        border: black;
+        border-radius: 15px;
+        transition: 0.2s ease-in-out;
+        color: white;
+        font-weight: bold;
+        width: calc(100%-10px);
+
+    }
+    .search-input:hover {
+        padding: 9px;
+        box-shadow: 0 0px 10px rgb(131, 183, 131);
+
+    }
+    .apply-button {
+        width: 100%;
+        margin-right: 0;
+        padding: 10px;
+        background-color: rgb(66, 122, 66);
+        cursor: pointer;
+        border: black;
+        border-radius: 15px;
+        transition: 0.2s ease-in-out;
+        color: white;
+        font-weight: bold;
+    }
+    .apply-button:hover {
+        background-color: rgb(67, 100, 67);
+        border-radius: 40px;
+        box-shadow: 0 0px 10px rgb(131, 183, 131);
+    }
+    .plant-card {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #a6c7b597;
+    }
+    .plant-image {
+        width: 150px;
+        height: 150px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+    }
+    .plant-image img {
+        width: 100%;
+        height: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    th {
+        background-color: #8bbf9dc7;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+        .search-input, .filter-select, .apply-button {
+            width: calc(100% - 10px);
+            margin-right: 0;
+        }
+        .img {
+            height: 15vh;
+            width: auto;
+        }
+        h1 {
+            font-size: 25px;
+        }
+    }
+    img {
+        display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 25vh; /* Optional: Set the container height */
+    display: block; margin: 0 auto; width: auto;
+    margin-bottom: 10px;
+    }
+    h1 {
+      text-align: center;
+      color: #3c6338;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <img class="img" src="https://media.discordapp.net/attachments/1206202818583859233/1228726441068462140/KKTS_Logo-removebg-preview_1.png?ex=662d17ac&is=661aa2ac&hm=0e6310dd7eb825f3da3ac5385a5f75cf6470b5ea502141a35bfcb4f2a2a56932&=&format=webp&quality=lossless&width=625&height=625" alt="Logo">
+    <h1>Koperkan Tuinsentrum</h1>
+    <div class="filter-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by name...">
+        <select id="typeFilter" class="filter-select">
+            <option value="">Filter by type...</option>
+            <option value="Annual">Annual</option>
+            <option value="Perennial">Perennial</option>
+        </select>
+        <select id="sunlightFilter" class="filter-select">
+            <option value="">Filter by sunlight...</option>
+            <option value="Full Sun">Full Sun</option>
+            <option value="Partial Shade">Partial Shade</option>
+        </select>
+        <button onclick="applyFilters()" class="apply-button">Apply Filters</button>
+    </div>
+
+    <div id="plantList"></div>
+</div>
+
+<script>
+    const plants = [
+        {
+            name: "Sunflower",
+            image: "sunflower.jpg",
+            type: "Annual",
+            height: "5-12 feet",
+            spread: "1-3 feet",
+            watering: "Water regularly, especially during dry periods.",
+            seasons: "Spring, Summer",
+            sunlight: "Full Sun",
+            instructions: "Plant in well-drained soil and provide plenty of sunlight."
+        },
+        {
+            name: "Lavender",
+            image: "lavender.jpg",
+            type: "Perennial",
+            height: "1-3 feet",
+            spread: "1-2 feet",
+            watering: "Water deeply but infrequently.",
+            seasons: "Spring, Summer",
+            sunlight: "Full Sun",
+            instructions: "Plant in sandy, well-drained soil and place in full sunlight."
+        },
+        {
+            name: "Tomato",
+            image: "tomato.jpg",
+            type: "Annual",
+            height: "3-10 feet",
+            spread: "1-3 feet",
+            watering: "Water regularly, keeping soil consistently moist.",
+            seasons: "Spring, Summer",
+            sunlight: "Full Sun",
+            instructions: "Plant in rich, well-drained soil and provide support for vines."
+        }
+    ];
+
+    const plantList = document.getElementById('plantList');
+    let filteredPlants = plants;
+
+    function renderPlants(plantsData) {
+        plantList.innerHTML = '';
+        plantsData.forEach(plant => {
+            const plantCard = document.createElement('div');
+            plantCard.classList.add('plant-card');
+            plantCard.innerHTML = `
+            <div class="plant-image">
+                <img src="${plant.image}" alt="${plant.name}">
+            </div>
+            <table>
+                <tr>
+                    <th><i class="fas fa-leaf"></i> Name:</th>
+                    <td>${plant.name}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-seedling"></i> Type:</th>
+                    <td>${plant.type}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-arrows-alt-v"></i> Height:</th>
+                    <td>${plant.height}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-expand-arrows-alt"></i> Spread:</th>
+                    <td>${plant.spread}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-tint"></i> Watering Information:</th>
+                    <td>${plant.watering}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-calendar-alt"></i> Seasons:</th>
+                    <td>${plant.seasons}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-sun"></i> Sunlight:</th>
+                    <td>${plant.sunlight}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-file-alt"></i> Planting Instructions:</th>
+                    <td>${plant.instructions}</td>
+                </tr>
+            </table>
+            `;
+            plantList.appendChild(plantCard);
+        });
+    }
+
+    function applyFilters() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+        const typeFilter = document.getElementById('typeFilter').value;
+        const sunlightFilter = document.getElementById('sunlightFilter').value;
+
+        filteredPlants = plants.filter(plant => {
+            const nameMatch = plant.name.toLowerCase().includes(searchValue);
+            const typeMatch = typeFilter ? plant.type === typeFilter : true;
+            const sunlightMatch = sunlightFilter ? plant.sunlight === sunlightFilter : true;
+            return nameMatch && typeMatch && sunlightMatch;
+        });
+
+        renderPlants(filteredPlants);
+    }
+
+    renderPlants(filteredPlants);
+</script>
+
+</body>
+</html>
